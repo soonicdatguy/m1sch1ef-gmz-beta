@@ -6,76 +6,158 @@
       <xhtml:title>M1sch1ef</xhtml:title>
       <xhtml:style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0c10; color: #c5c6c7; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #313338; color: #dbdee1; }
         
-        .container { display: flex; width: 100vw; height: 100vh; }
+        .app-container { display: flex; width: 100vw; height: 100vh; }
         
-        /* Navigation Sidebar */
-        .sidebar { width: 260px; background: #1f2833; display: flex; flex-direction: column; border-right: 2px solid #45f3ff; padding: 20px; }
-        .brand { font-size: 24px; font-weight: bold; color: #45f3ff; text-align: center; margin-bottom: 40px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(69,243,255,0.3); }
-        .nav-btn { background: transparent; border: 1px solid transparent; color: #c5c6c7; padding: 12px 20px; text-align: left; font-size: 16px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; transition: all 0.3s ease; }
-        .nav-btn:hover, .nav-btn.active { background: #45f3ff; color: #0b0c10; font-weight: bold; box-shadow: 0 0 15px rgba(69,243,255,0.4); }
+        /* Left Server/Feature Bar */
+        .guild-sidebar { width: 72px; background: #1e1f22; display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 8px; }
+        .guild-icon { width: 48px; height: 48px; background: #5865f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: border-radius 0.2s, background-color 0.2s; text-decoration: none; }
+        .guild-icon:hover { border-radius: 16px; background: #4752c4; }
         
-        /* Main Display Area */
-        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; background: #0b0c10; }
-        .tab-content { display: none; width: 100%; height: 100%; padding: 30px; overflow-y: auto; }
-        .tab-content.active { display: block; }
+        /* Channels Sidebar */
+        .channel-sidebar { width: 240px; background: #2b2d31; display: flex; flex-direction: column; }
+        .server-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; padding: 0 16px; font-weight: bold; color: #f2f3f5; font-size: 16px; }
+        .channel-list { padding: 8px; flex: 1; }
+        .channel-btn { width: 100%; background: transparent; border: none; color: #949ba4; padding: 6px 8px; text-align: left; font-size: 15px; border-radius: 4px; cursor: pointer; margin-bottom: 2px; display: flex; align-items: center; transition: background-color 0.1s, color 0.1s; }
+        .channel-btn::before { content: "# "; font-size: 18px; color: #80848e; margin-right: 6px; }
+        .channel-btn:hover, .channel-btn.active { background: #35373c; color: #f2f3f5; }
+        .channel-btn.active::before { color: #dbdee1; }
         
-        /* Elements inside tabs */
-        h2 { color: #45f3ff; margin-bottom: 20px; font-size: 28px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { background: #1f2833; border: 1px solid #2f3b4c; border-radius: 12px; padding: 20px; text-align: center; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
-        .card:hover { transform: translateY(-5px); border-color: #45f3ff; }
-        .card a { color: #fff; text-decoration: none; font-weight: bold; display: block; width: 100%; height: 100%; }
+        /* Chat Main Workspace */
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: #313338; position: relative; }
+        .chat-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .chat-header-title { font-weight: bold; color: #f2f3f5; display: flex; align-items: center; }
+        .chat-header-title::before { content: "#"; font-size: 20px; color: #80848e; margin-right: 8px; }
         
-        /* Game View Frame */
-        #game-container { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .back-btn { position: absolute; top: 15px; right: 15px; background: #ff4757; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; z-index: 100; }
+        /* Actions */
+        .action-container { display: flex; gap: 8px; }
+        .action-btn { background: #4e5058; color: #f2f3f5; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; transition: background 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
+        .action-btn:hover { background: #6d6f78; }
+        
+        /* Content Display Panels */
+        .chat-scroller { flex: 1; padding: 16px; overflow-y: auto; display: none; }
+        .chat-scroller.active { display: block; }
+        
+        /* Messages Layout */
+        .msg-row { display: flex; margin-bottom: 20px; gap: 16px; }
+        .avatar { width: 40px; height: 40px; background: #5865f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 18px; flex-shrink: 0; }
+        .msg-content { flex: 1; }
+        .msg-author { font-weight: 500; color: #f2f3f5; margin-bottom: 4px; display: inline-block; margin-right: 8px; }
+        .msg-bot-tag { background: #5865f2; color: white; font-size: 10px; padding: 1px 4px; border-radius: 3px; font-weight: bold; text-transform: uppercase; vertical-align: middle; }
+        .msg-text { color: #dbdee1; line-height: 1.375rem; font-size: 15px; }
+        
+        /* Dynamic App Wrapper (Replaces IFrames entirely) */
+        #app-injection-zone { display: none; flex: 1; width: 100%; height: calc(100% - 48px); background: #000; }
+        #app-viewport { width: 100%; height: 100%; border: none; }
+        
+        /* Card Links */
+        .chat-card { background: #2b2d31; border: 1px solid #1e1f22; border-radius: 8px; padding: 12px; margin-top: 8px; display: inline-block; min-width: 300px; text-decoration: none; color: inherit; transition: background-color 0.2s; }
+        .chat-card:hover { background: #35373c; border-color: #5865f2; }
+        .card-title { color: #00a8fc; font-weight: 600; margin-bottom: 4px; }
+        .card-desc { font-size: 13px; color: #b5bac1; }
       </xhtml:style>
     </xhtml:head>
     <xhtml:body>
       
-      <div class="container">
-        <div class="sidebar">
-          <div class="brand">M1sch1ef</div>
-          <button class="nav-btn active" onclick="switchTab('games')">Games</button>
-          <button class="nav-btn" onclick="switchTab('partners')">Partners</button>
-          <button class="nav-btn" onclick="switchTab('links')">Links</button>
+      <div class="app-container">
+        <div class="guild-sidebar">
+          <a class="guild-icon" href="#">M1</a>
         </div>
 
-        <div class="main-content">
-          
-          <div id="game-container">
-            <button class="back-btn" onclick="closeGame()">✕ Close Game</button>
-            <iframe id="game-frame" src="about:blank"></iframe>
+        <div class="channel-sidebar">
+          <div class="server-header">M1sch1ef Workspace</div>
+          <div class="channel-list">
+            <button class="channel-btn active" id="btn-games" onclick="switchView('games')">gn-math-games</button>
+            <button class="channel-btn" id="btn-partners" onclick="switchView('partners')">partners</button>
+            <button class="channel-btn" id="btn-links" onclick="switchView('links')">links</button>
+            <button class="channel-btn" id="btn-socials" onclick="switchView('socials')">socials</button>
+          </div>
+        </div>
+
+        <div class="chat-area">
+          <div class="chat-header">
+            <div class="chat-header-title" id="current-header-title">gn-math-games</div>
+            <div class="action-container" id="header-actions" style="display:none;">
+              <button class="action-btn" onclick="popOutGame()">↗ Pop Out</button>
+              <button class="action-btn" onclick="openNewTab()">🌐 Open In New Tab</button>
+              <button class="action-btn" style="background:#da373c;" onclick="unloadGameSystem()">✕ Unload</button>
+            </div>
           </div>
 
-          <div id="games" class="tab-content active">
-            <h2>GN Math Games</h2>
-            <div class="grid">
-              <div class="card" onclick="loadGame('https://cdn.jsdelivr.net/gh/soonicdatguy/allinone@gnmath/singlefile.html')">
-                <h3>Launch All-In-One</h3>
-                <p style="font-size:12px; color:#888; margin-top:8px;">Click to load the GN Math directory</p>
+          <div id="app-injection-zone">
+             <iframe id="app-viewport" src="about:blank"></iframe>
+          </div>
+
+          <div id="view-games" class="chat-scroller active">
+            <div class="msg-row">
+              <div class="avatar" style="background:#3ba55c;">SYS</div>
+              <div class="msg-content">
+                <span class="msg-author">System Terminal</span><span class="msg-bot-tag">SYSTEM</span>
+                <div class="msg-text">
+                  Welcome to the game portal. Click the application link below to inject the system scripts directly into the active viewport core.
+                  <br />
+                  <div class="chat-card" style="cursor:pointer;" onclick="launchGameSystem()">
+                    <div class="card-title">🚀 Click to Initialize Game Client</div>
+                    <div class="card-desc">Assembles full file structures from unblocked raw source.</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="partners" class="tab-content">
-            <h2>Our Partners</h2>
-            <div class="grid">
-              <div class="card">
-                <a href="https://classroomspot.github.io" target="_blank">Classroomspot</a>
-              </div>
-              <div class="card">
-                <a href="https://dsc.gg/unknownbasement" target="_blank">Unknown Hub</a>
+          <div id="view-partners" class="chat-scroller">
+            <div class="msg-row">
+              <div class="avatar" style="background:#5865f2;">PRT</div>
+              <div class="msg-content">
+                <span class="msg-author">Partners Registry</span>
+                <div class="msg-text">
+                  Official verified partnerships connected directly to the M1sch1ef node:
+                  <br />
+                  <a class="chat-card" href="https://classroomspot.github.io" target="_blank">
+                    <div class="card-title">Classroomspot</div>
+                    <div class="card-desc">classroomspot.github.io — Visit partner instance</div>
+                  </a>
+                  <br />
+                  <a class="chat-card" href="https://dsc.gg/unknownbasement" target="_blank">
+                    <div class="card-title">Unknown Hub</div>
+                    <div class="card-desc">dsc.gg/unknownbasement — Connect directly</div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="links" class="tab-content">
-            <h2>Links</h2>
-            <p style="color:#888;">Content placeholder. (Provide your specific links later to populate this section).</p>
+          <div id="view-links" class="chat-scroller">
+            <div class="msg-row">
+              <div class="avatar">LNK</div>
+              <div class="msg-content">
+                <span class="msg-author">Links Hub</span>
+                <div class="msg-text">Waiting for input configurations... (Provide your links later to update this register).</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="view-socials" class="chat-scroller">
+            <div class="msg-row">
+              <div class="avatar" style="background:#eb459e;">SOC</div>
+              <div class="msg-content">
+                <span class="msg-author">Social Networks</span>
+                <div class="msg-text">
+                  Keep updated on official external configurations through our media channels:
+                  <br />
+                  <a class="chat-card" href="https://www.tiktok.com/@bananatheone" target="_blank">
+                    <div class="card-title">My TikTok!</div>
+                    <div class="card-desc">@bananatheone — Follow on TikTok</div>
+                  </a>
+                  <br />
+                  <a class="chat-card" href="https://dsc.gg/m1sch1ef" target="_blank">
+                    <div class="card-title">My Discord Server!</div>
+                    <div class="card-desc">dsc.gg/m1sch1ef — Connect to the Discord Server community hub</div>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -83,7 +165,8 @@
 
       <xhtml:script>
       //<![CDATA[
-        // Viewport handling
+        const TARGET_SOURCE = 'https://cdn.jsdelivr.net/gh/soonicdatguy/allinone@gnmath/singlefile.html';
+
         function size() {
           var w = window.innerWidth, h = window.innerHeight;
           var svg = document.querySelector('svg');
@@ -94,40 +177,17 @@
         size();
         window.addEventListener('resize', size);
 
-        // Tab Switching Logic
-        function switchTab(tabId) {
-          closeGame();
-          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-          document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        function switchView(target) {
+          // Manage UI Tabs
+          document.querySelectorAll('.chat-scroller').forEach(el => el.classList.remove('active'));
+          document.querySelectorAll('.channel-btn').forEach(el => el.classList.remove('active'));
           
-          document.getElementById(tabId).classList.add('active');
-          event.currentTarget.classList.add('active');
-        }
-
-        // Inline Game Loader Logic
-        function loadGame(url) {
-          const container = document.getElementById('game-container');
-          const frame = document.getElementById('game-frame');
-          frame.src = url;
-          container.style.display = 'block';
-        }
-
-        function closeGame() {
-          const container = document.getElementById('game-container');
-          const frame = document.getElementById('game-frame');
-          frame.src = 'about:blank';
-          container.style.display = 'none';
-        }
-
-        // "Are you sure you want to leave?" Tab Closure Prevention
-        window.addEventListener('beforeunload', function (e) {
-          e.preventDefault();
-          e.returnValue = 'Are you sure you want to exit M1sch1ef?';
-          return e.returnValue;
-        });
-      //]]>
-      </xhtml:script>
-    </xhtml:body>
-    </xhtml:html>
-  </foreignObject>
-</svg>
+          document.getElementById('view-' + target).classList.add('active');
+          document.getElementById('btn-' + target).classList.add('active');
+          document.getElementById('current-header-title').innerText = document.getElementById('btn-' + target).innerText;
+          
+          // Toggle script application visibility context
+          const injectionZone = document.getElementById('app-injection-zone');
+          if (target === 'games' && injectionZone.getAttribute('data-loaded') === 'true') {
+             injectionZone.style.display = 'block';
+             document.getElementById
